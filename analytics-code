@@ -1,0 +1,66 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+import csv
+
+
+class InsuranceData:
+    def __init__(self, file_path: str):
+        self.data = pd.read_csv('insurance.csv')
+
+class InsuranceStats:
+    def __init__(self, data: pd.DataFrame):
+        self.data = data
+
+# --------- Which other data are correlated with region? ----------
+    def region_correlation(self):
+        return self.data.corr()['region'].sort_values(ascending=False)
+# --------- What is the average cost of insurance by region? -------
+    def region_cost(self):
+        return self.data.groupby('region')['charges'].mean()
+    
+# --------- In what ways does number of children impact charges? -------
+    def children_charges(self):
+        return self.data.groupby('children')['charges'].mean()
+    def children_charges_correlation(self):
+        return self.data['children'].corr(self.data['charges'])
+
+# --------- What is the average age of all respondents? -----------
+    def mean_age(self):
+            return self.data['age'].mean()
+    
+# -- Average age of each sex? --
+    def mean_age_sex(self):
+        return self.data.groupby(['female, male']).mean()['age']
+   
+
+# --------- Is bmi correlated with number of children? ----------
+    def correlation_bmi_children(self, col1: str, col2: str):
+        return self.data['bmi'].corr(self.data['children'])
+    def correlation_bmi_children2(self, col1: str, col2: str):
+        return self.data['bmi', 'children'].corr().iloc[0, 1]   
+
+# --------- What is the average cost of insurance? -------------
+    def mean_cost(self):
+        return self.data['charges'].mean()
+
+# ---------- What's the standard deviation of charges? -----------
+    def std_dev_cost(self):
+        return self.data['charges'].std()
+'''
+mean_x = np.mean(x)
+std_dev_x = np.std(x)
+standardized_x = (x - mean_x) / std_dev_x
+print(np.mean(standardized_x)) # This should be close to 0
+print(np.std(standardized_x)) # This should be close to 1
+
+# GRAPH COST
+insurance[''].value_counts().plot(kind='bar')
+plt.title('')
+plt.xlabel('')
+plt.ylabel('')
+plt.show()
+'''
+
+insurance = InsuranceData('insurance.csv')
