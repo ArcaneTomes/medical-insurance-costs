@@ -71,5 +71,32 @@ insurance = InsuranceData('insurance.csv')
 insurance_stats = InsuranceStats(insurance.data)
 
 # Usage
-insurance_stats.region_bmi()
+print("Average BMI by region:")
+print(insurance_stats.region_bmi())
+
+print("\nAverage cost of insurance by region:")
+print(insurance_stats.region_cost())
+
+print("\nCharges by number of children:")
+print(insurance_stats.children_charges())
+
+print("\nCorrelation between number of children and charges:")
+print(insurance_stats.children_charges_correlation())
+
+print("\nAverage age of all respondents:")
+print(insurance_stats.mean_age())
+
+print("\nAverage age by sex:")
+print(insurance_stats.mean_age_sex())
+
+print("\nCorrelation between BMI and number of children:")
+insurance_stats.correlation_bmi_children()
+
+print("\nCorrelation graph between children and charges:")
+insurance_stats.correlation_graph2()
+
+print("\nBar graph of average charges by region:")
 insurance_stats.bar_graph()
+
+print("\nBar graph of average charges by number of children:")
+insurance_stats.bar_graph2()
