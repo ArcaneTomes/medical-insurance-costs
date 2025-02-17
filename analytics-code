@@ -2,65 +2,74 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-import csv
-
-
 class InsuranceData:
     def __init__(self, file_path: str):
-        self.data = pd.read_csv('insurance.csv')
+        self.data = pd.read_csv(file_path)
 
 class InsuranceStats:
     def __init__(self, data: pd.DataFrame):
         self.data = data
 
-# --------- Which other data are correlated with region? ----------
-    def region_correlation(self):
-        return self.data.corr()['region'].sort_values(ascending=False)
-# --------- What is the average cost of insurance by region? -------
+    # --------- What is the average BMI by region? --------------------------
+    def region_bmi(self):
+        return self.data.groupby('region')['bmi'].mean()
+
+    # --------- What is the average cost of insurance by region? -------
     def region_cost(self):
         return self.data.groupby('region')['charges'].mean()
     
-# --------- In what ways does number of children impact charges? -------
+    # --------- In what ways does number of children impact charges? -------
     def children_charges(self):
         return self.data.groupby('children')['charges'].mean()
+
     def children_charges_correlation(self):
         return self.data['children'].corr(self.data['charges'])
 
-# --------- What is the average age of all respondents? -----------
+    # --------- What is the average age of all respondents? -----------
     def mean_age(self):
-            return self.data['age'].mean()
-    
-# -- Average age of each sex? --
+        return self.data['age'].mean()
+
+    # -- Average age of each sex? --
     def mean_age_sex(self):
-        return self.data.groupby(['female, male']).mean()['age']
-   
+        return self.data.groupby('sex')['age'].mean()
 
-# --------- Is bmi correlated with number of children? ----------
-    def correlation_bmi_children(self, col1: str, col2: str):
-        return self.data['bmi'].corr(self.data['children'])
-    def correlation_bmi_children2(self, col1: str, col2: str):
-        return self.data['bmi', 'children'].corr().iloc[0, 1]   
+    # --------- Is bmi correlated with number of children? ----------
+    def correlation_bmi_children(self):
+        plt.figsize=(10, 8)
+        plt.scatter(self.data['bmi'], self.data['children'])
+        plt.title('Correlation between BMI and Number of Children')
+        plt.xlabel('BMI')
+        plt.ylabel('Number of Children')
+        plt.show()
 
-# --------- What is the average cost of insurance? -------------
-    def mean_cost(self):
-        return self.data['charges'].mean()
+    def correlation_graph2(self):
+        plt.figure(figsize=(10, 8))
+        plt.scatter(self.data['children'], self.data['charges'])
+        plt.title('Correlation between Children and Charges')
+        plt.xlabel('Children')
+        plt.ylabel('Charges')
+        plt.show()
 
-# ---------- What's the standard deviation of charges? -----------
-    def std_dev_cost(self):
-        return self.data['charges'].std()
-'''
-mean_x = np.mean(x)
-std_dev_x = np.std(x)
-standardized_x = (x - mean_x) / std_dev_x
-print(np.mean(standardized_x)) # This should be close to 0
-print(np.std(standardized_x)) # This should be close to 1
+    def bar_graph(self):
+        plt.figure(figsize=(10, 8))
+        self.data.groupby('region')['charges'].mean().plot(kind='bar')
+        plt.title('Average Charges by Region')
+        plt.xlabel('Region')
+        plt.ylabel('Average Charges')
+        plt.show()
+    
+    def bar_graph2(self):
+        plt.figure(figsize=(10, 8))
+        self.data.groupby('children')['charges'].mean().plot(kind='bar')
+        plt.title('Average Charges by Number of Children')
+        plt.xlabel('Number of Children')
+        plt.ylabel('Average Charges')
+        plt.show()
 
-# GRAPH COST
-insurance[''].value_counts().plot(kind='bar')
-plt.title('')
-plt.xlabel('')
-plt.ylabel('')
-plt.show()
-'''
-
+# Execution
 insurance = InsuranceData('insurance.csv')
+insurance_stats = InsuranceStats(insurance.data)
+
+# Usage
+insurance_stats.region_bmi()
+insurance_stats.bar_graph()
